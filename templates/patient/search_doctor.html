@@ -1,0 +1,61 @@
+{% extends "patient/base.html" %}
+{% block content %}
+<nav id="breadcrumbs" class="breadcrumbs">
+    <div class="container page-wrapper">
+        <a href="/">Home</a> » <span class="breadcrumb_last" aria-current="page">Upload Symptoms</span>
+    </div>
+</nav>
+<section class="w3l-contact-main">
+    <div class="contact-infhny py-5">
+        <div class="container py-lg-5">
+            <div class="title-content text-left mb-lg-5 mt-4">
+                <h6 class="sub-title">Bringing Best.</h6>
+                <h3 class="hny-title">Upload Symptoms</h3>
+            </div>
+            <div class="row align-form-map">
+                <div class="col-lg-8 form-inner-cont">
+                    <form method="post" class="signin-form" action="recommended_doctors">
+                        {%csrf_token%}
+                        <div class="form-input">
+                            <label>Age Group*</label>
+                            <input type="text" name="agegroup" value="{{agegroup}}" readonly required/>
+                        </div>
+                       <div class="form-input">
+                            <label>Symptoms*</label>
+                            <select name="symptoms" class="form-control"  multiple required>
+                                {%for symptom in symptoms %}
+                                <option value="{{symptom}}">{{symptom}}</option>
+                                {%endfor%}
+                            </select>
+                        </div>
+                        <div class="form-input">
+                            <label>Severity of Symptoms*</label>
+                            <select name="severity" class="form-control"  required>
+                                <option value="low">Low</option>
+                                <option value="moderate">moderate</option>
+                                <option value="high">high</option>
+                            </select>
+                        </div>
+                         <div class="form-input">
+                            <label>Any Previous Medical Condition*</label>
+                            <textarea name="history" required></textarea>
+                        </div>
+                         <div class="form-input">
+                            <label>Allergies*</label>
+                            <textarea name="allergies" required></textarea>
+                        </div>
+                         <div class="form-input">
+                            <label>Hereditary Problems*</label>
+                            <textarea name="hp" required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-contact">Upload</button>
+                        <div class="form-input">
+                            <label class="text-info">{{message}}</label>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

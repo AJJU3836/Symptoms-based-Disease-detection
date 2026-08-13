@@ -1,0 +1,8 @@
+venv/
+__pycache__/
+*.pyc
+.idea/
+.vscode/
+.env
+media/doctor/
+# dbDoctor.sqlite3 # Uncomment this line if you do NOT want to upload your database to GitHub

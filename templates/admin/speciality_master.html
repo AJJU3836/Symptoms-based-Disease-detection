@@ -1,0 +1,47 @@
+{% extends "admin/base.html" %}
+{% block content %}
+<nav id="breadcrumbs" class="breadcrumbs">
+    <div class="container page-wrapper">
+        <a href="login">Logout</a> » <span class="breadcrumb_last" aria-current="page">Speciality Master</span>
+    </div>
+</nav>
+<section class="w3l-contact-main">
+    <div class="contact-infhny py-5">
+        <div class="container py-lg-5">
+            <div class="title-content text-left mb-lg-5 mt-4">
+                <h6 class="sub-title">Bringing Best.</h6>
+                <h3 class="hny-title">Speciality Master</h3>
+            </div>
+            <div class="row">
+                <div class="col-lg-12">
+                    <label class="text-info">{{message}}</label>
+                    <div class="table-responsive">
+                        <table id="patients" class="table table-stripped">
+                            <thead>
+                            <tr>
+                                <th>Speciality</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for speciality in specialities %}
+                            <tr>
+                                <td>{{ speciality.name }}</td>
+                                <td>
+                                    <form method="post">
+                                        {%csrf_token%}
+                                        <input type="hidden" name="name" value="{{ speciality.name }}" required>
+                                        <input type="submit" class="btn btn-danger" value="Delete">
+                                    </form>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}
