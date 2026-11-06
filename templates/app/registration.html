@@ -1,60 +1,106 @@
-{% extends "app/base.html" %}
+﻿{% extends "app/base.html" %}
 {% block content %}
 <nav id="breadcrumbs" class="breadcrumbs">
     <div class="container page-wrapper">
-        <a href="/">Home</a> » <span class="breadcrumb_last" aria-current="page">Patient Registration</span>
+        <a href="/">Home</a> &raquo; <span class="breadcrumb_last" aria-current="page">Patient Registration</span>
     </div>
 </nav>
-<section class="w3l-contact-main">
-    <div class="contact-infhny py-5">
-        <div class="container py-lg-5">
-            <div class="title-content text-left mb-lg-5 mt-4">
-                <h6 class="sub-title">Patient Registration</h6>
-                <h3 class="hny-title">Explore our services.</h3>
+
+<section class="py-5" style="background: #f8fafc; min-height: 80vh;">
+    <div class="container">
+        <div class="auth-wrapper" style="max-width: 600px;">
+            <div class="auth-header">
+                <div style="width: 50px; height: 50px; background: rgba(255, 255, 255, 0.15); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 12px;">
+                    <i class="fa fa-user-plus" style="font-size: 22px; color: #38bdf8;"></i>
+                </div>
+                <h3>Patient Registration</h3>
+                <p>Create your health profile to access AI disease detection</p>
             </div>
-            <div class="row align-form-map">
-                <div class="col-lg-8 form-inner-cont">
-                    <form method="post" class="signin-form">
-                        {%csrf_token%}
-                        <div class="form-input">
-                            <label>Name*</label>
-                            <input type="text" name="name" required>
+
+            <div class="auth-body">
+                {% if message %}
+                <div class="alert {% if 'done' in message %}alert-success{% else %}alert-danger{% endif %} mb-4" style="border-radius: 10px; font-size: 13.5px; padding: 12px 16px;">
+                    <i class="fa {% if 'done' in message %}fa-check-circle{% else %}fa-exclamation-circle{% endif %}"></i> {{ message }}
+                    {% if 'done' in message %}
+                    <div class="mt-2"><a href="/login" class="btn btn-sm btn-success">Proceed to Login â†’</a></div>
+                    {% endif %}
+                </div>
+                {% endif %}
+
+                <form method="post">
+                    {% csrf_token %}
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group-modern">
+                                <label><i class="fa fa-user"></i> Full Name*</label>
+                                <input type="text" name="name" placeholder="John Doe" required>
+                            </div>
                         </div>
-                        <div class="form-input">
-                            <label>Gender*</label>
-                            <select name="gender" class="form-control" required>
-                                <option value="male">Male</option>
-                                <option value="female">Female</option>
-                            </select>
+
+                        <div class="col-md-6">
+                            <div class="form-group-modern">
+                                <label><i class="fa fa-venus-mars"></i> Gender*</label>
+                                <select name="gender" required>
+                                    <option value="male">Male</option>
+                                    <option value="female">Female</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </div>
                         </div>
-                        <div class="form-input">
-                            <label>Date of Birth*</label>
-                            <input placeholder=" " name="dob" type="date" id="dob" required="">
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group-modern">
+                                <label><i class="fa fa-calendar"></i> Date of Birth*</label>
+                                <input name="dob" type="date" id="dob" required>
+                            </div>
                         </div>
-                        <div class="form-input">
-                            <label>Email*</label>
-                            <input type="email" name="email" required>
+
+                        <div class="col-md-6">
+                            <div class="form-group-modern">
+                                <label><i class="fa fa-envelope"></i> Email Address*</label>
+                                <input type="email" name="email" placeholder="john@example.com" required>
+                            </div>
                         </div>
-                        <div class="form-input">
-                            <label>Mobile*</label>
-                            <input type="text" name="mobile" pattern="[789][0-9]{9}" required>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group-modern">
+                                <label><i class="fa fa-phone"></i> Mobile Number*</label>
+                                <input type="text" name="mobile" pattern="[789][0-9]{9}" placeholder="10-digit mobile" required>
+                            </div>
                         </div>
-                        <div class="form-input">
-                            <label>Password*</label>
-                            <input type="password" name="password" required>
+
+                        <div class="col-md-6">
+                            <div class="form-group-modern">
+                                <label><i class="fa fa-lock"></i> Account Password*</label>
+                                <input type="password" name="password" placeholder="Create password" required>
+                            </div>
                         </div>
-                        <div class="form-input">
-                            <label>Address*</label>
-                            <textarea name="address" required></textarea>
-                        </div>
-                        <button type="submit" class="btn btn-contact">Register</button>
-                        <div class="form-input">
-                            <label class="text-info">{{message}}</label>
-                        </div>
-                    </form>
+                    </div>
+
+                    <div class="form-group-modern">
+                        <label><i class="fa fa-map-marker"></i> Residential Address*</label>
+                        <textarea name="address" rows="2" placeholder="Street, City, State" required></textarea>
+                    </div>
+
+                    <button type="submit" class="btn btn-modern-primary w-100 py-3 mt-2" style="font-size: 15px;">
+                        <i class="fa fa-check-circle"></i> Complete Registration
+                    </button>
+                </form>
+
+                <div class="text-center mt-4">
+                    <p style="font-size: 13.5px; color: #64748b; margin: 0;">
+                        Already have an account?
+                        <a href="/login" style="color: #1068eb; font-weight: 600; text-decoration: none;">Sign in here</a>
+                    </p>
                 </div>
             </div>
         </div>
     </div>
 </section>
 {% endblock %}
+

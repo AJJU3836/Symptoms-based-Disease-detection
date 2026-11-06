@@ -1,2 +1,4 @@
 @ECHO OFF
-%windir%\System32\cmd.exe /K "python manage.py runserver"
+cd /d "%~dp0"
+venv\Scripts\python manage.py runserver
+pause

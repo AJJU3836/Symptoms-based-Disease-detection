@@ -2,54 +2,51 @@
 <html lang="en">
 
 <head>
-    <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Lifeline
-    </title>
-    <!-- Template CSS -->
-    <link rel="stylesheet" href="static/css/style-starter.css">
-    <!-- Template CSS -->
-    <link href="//fonts.googleapis.com/css?family=Poppins:300,400,400i,500,600,700&display=swap" rel="stylesheet">
-    <!-- Template CSS -->
+    <title>DiseaseDetect &mdash; Patient Diagnostic Portal</title>
+    <!-- Template CSS & Custom Design System -->
+    <link rel="stylesheet" href="/static/css/style-starter.css">
+    <link rel="stylesheet" href="/static/css/modern-custom.css">
+    <link href="//fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 
 <body>
-<!--w3l-header-->
+<!-- Top header -->
 <section class="w3l-top-header-content">
     <div class="hny-top-menu">
         <div class="container">
-            <div class="row">
-                <div class="top-left col-lg-6">
-                    <ul class="accounts">
-                        <li class="top_li"><span class="fa fa-map-o"></span> <a href="#">Morgaon Road, Khandoba Nagar, Baramati</a>
+            <div class="row align-items-center">
+                <div class="top-left col-lg-7">
+                    <ul class="accounts mb-0 d-flex align-items-center">
+                        <li class="top_li mr-3">
+                            <span class="fa fa-user-circle text-primary"></span>
+                            <span>Patient Portal &mdash; Active Session</span>
                         </li>
-                        <li class="top_li mr-lg-0"><span class="fa fa-envelope-o"></span> <a
-                                href="#" class="mail"> info@lifeline.com</a>
-
+                        <li class="top_li">
+                            <span class="fa fa-heartbeat text-danger"></span>
+                            <span>AI Screening Engine Active</span>
                         </li>
                     </ul>
                 </div>
-                <div class="social-top col-lg-6 mt-lg-0 mt-sm-3">
-                    <div class="top-bar-text"><a class="bk-button" href="login">LOGOUT </a> 24X7 Available
-                    </div>
+                <div class="social-top col-lg-5 text-right mt-lg-0 mt-2">
+                    <a class="bk-button" href="/login" style="background:#ef4444!important;"><i class="fa fa-sign-out"></i> LOGOUT</a>
                 </div>
-
             </div>
         </div>
     </div>
 </section>
-<!--//top-header-content-->
-<!--w3l-header-->
+
+<!-- Header nav -->
 <header class="w3l-header-nav">
-    <!--/nav-->
-    <nav class="navbar navbar-expand-lg navbar-light px-lg-0 py-0 px-3 stroke">
+    <nav class="navbar navbar-expand-lg navbar-light px-lg-0 py-2 px-3 stroke">
         <div class="container">
-            <a class="navbar-brand" href="searchdoctor"><span>Life</span>line</a>
-            <!-- if logo is image enable this
-                    <a class="navbar-brand" href="#/">
-                        <img src="image-path" alt="Your logo" title="Your logo" style="height:35px;" />
-                    </a> -->
+            <a class="navbar-brand" href="/checksymptoms">
+                <span class="fa fa-heartbeat" style="color:#1068eb;font-size:28px;"></span>
+                <span>Disease</span>Detect
+            </a>
+
             <button class="navbar-toggler collapsed" type="button" data-toggle="collapse"
                     data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
                     aria-label="Toggle navigation">
@@ -60,192 +57,74 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav mx-lg-auto">
                     <li class="nav-item active">
-                        <a class="nav-link" href="searchdoctor">Upload Symptoms</a>
-                    </li>
-                         <a class="nav-link" href="saveddoctors">Quick Access</a>
+                        <a class="nav-link" href="/checksymptoms"><i class="fa fa-stethoscope"></i> Check Symptoms</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="changepassword">Change Password</a>
+                        <a class="nav-link" href="/changepassword"><i class="fa fa-key"></i> Change Password</a>
                     </li>
                 </ul>
-                <div class="call-support">
-                    <p>Call us for any question</p>
-                    <h5>02112-320-927</h5>
+                <div class="call-support d-none d-lg-block">
+                    <span class="badge badge-success px-3 py-2" style="font-size:12px;background:#10b981;border-radius:20px;">
+                        <i class="fa fa-check-circle"></i> AI Model Online
+                    </span>
                 </div>
             </div>
         </div>
     </nav>
-    <!--//nav-->
 </header>
-{%block content%}
-{%endblock%}
+
+{% block content %}
+{% endblock %}
+
 <footer class="w3l-footer-66">
-    <div class="cpy-right py-3">
-        <p class="text-center">© 2024-25 Lifeline. All rights reserved | Project by
-            <a href="#"> Computer Group.</a>
-        </p>
+    <div class="container py-4">
+        <div class="row text-center text-md-left">
+            <div class="col-md-6 mb-3 mb-md-0">
+                <h5 style="color:#0f172a;font-weight:700;"><span style="color:#1068eb;">Disease</span>Detect</h5>
+                <p style="font-size:13px;color:#64748b;max-width:400px;">
+                    Intelligent disease detection and risk classification using machine learning.
+                </p>
+            </div>
+            <div class="col-md-6 text-md-right">
+                <p style="font-size:12px;color:#94a3b8;">
+                    Â© 2026 DiseaseDetect System. For educational & screening purposes only.
+                </p>
+            </div>
+        </div>
     </div>
-    <!-- move top -->
+
+    <!-- Move top -->
     <button onclick="topFunction()" id="movetop" title="Go to top">
         <span class="fa fa-level-up"></span>
     </button>
     <script>
-			// When the user scrolls down 20px from the top of the document, show the button
-			window.onscroll = function () {
-				scrollFunction()
-			};
-
-			function scrollFunction() {
-				if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
-					document.getElementById("movetop").style.display = "block";
-				} else {
-					document.getElementById("movetop").style.display = "none";
-				}
-			}
-
-			// When the user clicks on the button, scroll to the top of the document
-			function topFunction() {
-				document.body.scrollTop = 0;
-				document.documentElement.scrollTop = 0;
-			}
-
+        window.onscroll = function () {
+            scrollFunction();
+        };
+        function scrollFunction() {
+            if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+                document.getElementById("movetop").style.display = "block";
+            } else {
+                document.getElementById("movetop").style.display = "none";
+            }
+        }
+        function topFunction() {
+            document.body.scrollTop = 0;
+            document.documentElement.scrollTop = 0;
+        }
     </script>
-    <!-- /move top -->
 </footer>
-<!--//footer-66 -->
-</body>
 
+<script src="/static/js/jquery-3.3.1.min.js"></script>
+<script src="/static/js/bootstrap.min.js"></script>
+<script>
+    $(function () {
+        $('.navbar-toggler').click(function () {
+            $('body').toggleClass('noscroll');
+        });
+    });
+</script>
+</body>
 </html>
 
-<script src="static/js/jquery-3.3.1.min.js"></script>
-<!-- disable body scroll which navbar is in active -->
 
-<!--//-->
-<script>
-	$(function () {
-		$('.navbar-toggler').click(function () {
-			$('body').toggleClass('noscroll');
-		})
-	});
-
-</script>
-<!--/scroll-down-JS-->
-<!-- stats -->
-<script src="static/js/jquery.waypoints.min.js"></script>
-<script src="static/js/jquery.countup.js"></script>
-<script>
-	$('.counter').countUp();
-
-</script>
-<!-- //stats -->
-<script src="static/js/jquery.magnific-popup.min.js"></script>
-<script type="text/javascript">
-	$(document).ready(function () {
-		$('.popup-with-zoom-anim').magnificPopup({
-			type: 'inline',
-
-			fixedContentPos: false,
-			fixedBgPos: true,
-
-			overflowY: 'auto',
-
-			closeBtnInside: true,
-			preloader: false,
-
-			midClick: true,
-			removalDelay: 300,
-			mainClass: 'my-mfp-zoom-in'
-		});
-
-		$('.popup-with-move-anim').magnificPopup({
-			type: 'inline',
-
-			fixedContentPos: false,
-			fixedBgPos: true,
-
-			overflowY: 'auto',
-
-			closeBtnInside: true,
-			preloader: false,
-
-			midClick: true,
-			removalDelay: 300,
-			mainClass: 'my-mfp-slide-bottom'
-		});
-	});
-
-</script>
-<!-- for blog carousel slider -->
-<script src="static/js/owl.carousel.js"></script>
-<!-- script for banner slider-->
-<script>
-	$(document).ready(function () {
-		$('.owl-one').owlCarousel({
-			loop: true,
-			margin: 0,
-			nav: false,
-			responsiveClass: true,
-			autoplay: false,
-			autoplayTimeout: 5000,
-			autoplaySpeed: 1000,
-			autoplayHoverPause: false,
-			responsive: {
-				0: {
-					items: 1,
-					nav: false
-				},
-				480: {
-					items: 1,
-					nav: false
-				},
-				667: {
-					items: 1,
-					nav: true
-				},
-				1000: {
-					items: 1,
-					nav: true
-				}
-			}
-		})
-	})
-
-</script>
-<!-- //testimonials owlcarousel -->
-<script>
-	$(document).ready(function () {
-		$('.owl-two').owlCarousel({
-			loop: true,
-			margin: 20,
-			nav: false,
-			responsiveClass: true,
-			autoplay: false,
-			autoplayTimeout: 5000,
-			autoplaySpeed: 1000,
-			autoplayHoverPause: false,
-			responsive: {
-				0: {
-					items: 1,
-					nav: false
-				},
-				480: {
-					items: 1,
-					nav: false
-				},
-				667: {
-					items: 1,
-					nav: false
-				},
-				1000: {
-					items: 1,
-					nav: false
-				}
-			}
-		})
-	})
-
-</script>
-<!-- //script for Testimonials-->
-<!-- //script -->
-
-<script src="static/js/bootstrap.min.js"></script>

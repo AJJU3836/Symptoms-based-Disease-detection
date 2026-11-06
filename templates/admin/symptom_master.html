@@ -2,50 +2,99 @@
 {% block content %}
 <nav id="breadcrumbs" class="breadcrumbs">
     <div class="container page-wrapper">
-        <a href="login">Logout</a> » <span class="breadcrumb_last" aria-current="page">Symptom Master</span>
+        <a href="/patientmaster">Admin Console</a> &raquo; <span class="breadcrumb_last" aria-current="page">Symptom Master</span>
     </div>
 </nav>
-<section class="w3l-contact-main">
-    <div class="contact-infhny py-5">
-        <div class="container py-lg-5">
-            <div class="title-content text-left mb-lg-5 mt-4">
-                <h6 class="sub-title">Bringing Best.</h6>
-                <h3 class="hny-title">Symptom Master</h3>
+
+<section class="py-5" style="background: #f8fafc; min-height: 85vh;">
+    <div class="container">
+        <div class="d-flex flex-wrap justify-content-between align-items-center mb-4">
+            <div>
+                <h6 class="sub-title"><i class="fa fa-medkit"></i> Clinical Symptoms</h6>
+                <h2 class="hny-title" style="font-size: 28px;">All Registered Symptoms</h2>
+                <p style="color: #64748b; font-size: 14px; margin: 4px 0 0;">
+                    Manage individual clinical indicators and their medical category associations.
+                </p>
             </div>
-            <div class="row">
-                <div class="col-lg-12">
-                    <label class="text-info">{{message}}</label>
-                    <div class="table-responsive">
-                        <table id="patients" class="table table-stripped">
-                            <thead>
-                            <tr>
-                                <th>Symptom</th>
-                                <th>Speciality</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            {% for symptom in symptoms %}
-                            <tr>
-                                <td>{{ symptom.name }}</td>
-                                <td>{{ symptom.speciality.name }}</td>
-                                <td>
-                                    <form method="post">
-                                        {%csrf_token%}
-                                        <input type="hidden" name="name" value="{{ symptom.name }}" required>
-                                        <input type="hidden" name="speciality" value="{{ symptom.speciality.name }}"
-                                               required>
-                                        <input type="submit" class="btn btn-danger" value="Delete">
-                                    </form>
-                                </td>
-                            </tr>
-                            {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+            <div class="mt-3 mt-md-0 d-flex gap-2" style="gap: 10px;">
+                <span class="badge badge-info px-3 py-2" style="font-size: 13px; border-radius: 20px;">
+                    Total: {{ symptoms|length }} Symptoms
+                </span>
+                <a href="/addsymptom" class="btn btn-modern-primary">
+                    <i class="fa fa-plus"></i> Add Symptom
+                </a>
+            </div>
+        </div>
+
+        {% if message %}
+        <div class="alert alert-info mb-4" style="border-radius: 10px;">{{ message }}</div>
+        {% endif %}
+
+        <div class="modern-card">
+            <!-- Client side search box -->
+            <div class="mb-3">
+                <input type="text" id="symptom-table-search" class="form-control" placeholder="Search symptoms..." style="border-radius: 8px; padding: 10px 14px; border: 1px solid #e2e8f0;" onkeyup="filterSymptomTable()">
+            </div>
+
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0" id="symptoms-table">
+                    <thead style="background: #0f172a; color: white; font-size: 13px;">
+                        <tr>
+                            <th style="padding: 12px 16px; width: 60px;">#</th>
+                            <th>Symptom Name</th>
+                            <th>Department / Speciality</th>
+                            <th style="width: 140px;">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody style="font-size: 13.5px;">
+                        {% for symptom in symptoms %}
+                        <tr>
+                            <td style="padding: 10px 16px; color: #94a3b8;">{{ forloop.counter }}</td>
+                            <td style="font-weight: 700; color: #0f172a;">{{ symptom.name }}</td>
+                            <td><span class="badge badge-light px-2 py-1">{{ symptom.speciality.name }}</span></td>
+                            <td>
+                                <form method="post" onsubmit="return confirm('Delete this symptom?');">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="name" value="{{ symptom.name }}" required>
+                                    <input type="hidden" name="speciality" value="{{ symptom.speciality.name }}" required>
+                                    <button type="submit" class="btn btn-sm btn-outline-danger" style="border-radius: 6px;">
+                                        <i class="fa fa-trash"></i> Delete
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="4" class="text-center py-4 text-muted">
+                                No symptoms registered in database.
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
 </section>
 
+<script>
+function filterSymptomTable() {
+    let input = document.getElementById("symptom-table-search");
+    let filter = input.value.toLowerCase();
+    let table = document.getElementById("symptoms-table");
+    let tr = table.getElementsByTagName("tr");
+
+    for (let i = 1; i < tr.length; i++) {
+        let td = tr[i].getElementsByTagName("td")[1];
+        if (td) {
+            let txtValue = td.textContent || td.innerText;
+            if (txtValue.toLowerCase().indexOf(filter) > -1) {
+                tr[i].style.display = "";
+            } else {
+                tr[i].style.display = "none";
+            }
+        }
+    }
+}
+</script>
 {% endblock %}

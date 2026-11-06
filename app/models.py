@@ -33,27 +33,11 @@ class Symptom(models.Model):
         db_table = 'tblSymptom'
 
 
-class Doctor(models.Model):
-    id = models.TextField(primary_key=True)
-    mobile = models.TextField()
-    name = models.TextField()
-    qualification = models.TextField()
-    gender = models.TextField()
-    address = models.TextField()
-    email = models.TextField()
-    experience = models.TextField()
-    agegroup = models.TextField()
+class Disease(models.Model):
+    name = models.TextField(primary_key=True)
+    description = models.TextField()
+    precautions = models.TextField()
     speciality = models.ForeignKey(Speciality, on_delete=models.RESTRICT)
 
     class Meta:
-        db_table = 'tblDoctor'
-
-
-class PatientDoctor(models.Model):
-    id = CompositeKey(columns=['patient_id', 'doctor_id'])
-    patient = models.ForeignKey(Patient, on_delete=models.RESTRICT)
-    doctor = models.ForeignKey(Doctor, on_delete=models.RESTRICT)
-    unique_together = (('patient', 'doctor'),)
-
-    class Meta:
-        db_table = 'tblPatientDoctor'
+        db_table = 'tblDisease'

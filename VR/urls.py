@@ -1,37 +1,37 @@
-"""VR URL Configuration
-
-The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/2.2/topics/http/urls/
-Examples:
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  path('', views.home, name='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
-Including another URLconf
-    1. Import the include() function: from django.urls import include, path
-    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
-"""
+"""VR URL Configuration"""
 from django.conf.urls.static import static
 from django.urls import path
+from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 import app.views
 from VR import settings
 
-urlpatterns = [
-                  path('', app.views.home),
-                  path('registration', app.views.registration),
-                  path('login', app.views.login),
-                  path('patientmaster', app.views.patient_master),
-                  path('addspeciality', app.views.add_speciality),
-                  path('addsymptom', app.views.add_symptom),
-                  path('specialitymaster', app.views.speciality_master),
-                  path('symptommaster', app.views.symptom_master),
-                  path('adddoctor', app.views.add_doctor),
-                  path('doctormaster', app.views.doctor_master),
-                  path('searchdoctor', app.views.search_doctor),
-                  path('recommended_doctors', app.views.recommended_doctors),
-                  path('saveddoctors', app.views.saved_doctors),
-                  path('changepassword', app.views.change_password),
+routes = [
+    ('',                    app.views.home),
+    ('registration',        app.views.registration),
+    ('login',               app.views.login),
+    # ── Admin ────────────────────────────────────────────────────────────────
+    ('patientmaster',       app.views.patient_master),
+    ('addspeciality',       app.views.add_speciality),
+    ('addsymptom',          app.views.add_symptom),
+    ('specialitymaster',    app.views.speciality_master),
+    ('symptommaster',       app.views.symptom_master),
+    ('adddisease',          app.views.add_disease),
+    ('diseasemaster',       app.views.disease_master),
+    ('modelperformance',    app.views.model_performance),
+    ('retrainmodel',        app.views.retrain_model),
+    # ── Patient ──────────────────────────────────────────────────────────────
+    ('checksymptoms',       app.views.check_symptoms),
+    ('detected_diseases',   app.views.detected_diseases),
+    ('changepassword',      app.views.change_password),
+]
 
-              ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+urlpatterns = []
+for route, view in routes:
+    if route == '':
+        urlpatterns.append(path('', view))
+    else:
+        urlpatterns.append(path(route, view))
+        urlpatterns.append(path(f"{route}/", view))
+
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+urlpatterns += staticfiles_urlpatterns()

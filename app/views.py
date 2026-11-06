@@ -1,11 +1,21 @@
 from datetime import datetime
+import os
 
 from django.db import IntegrityError
 from django.shortcuts import render, redirect
+from django.conf import settings
 from app import admin
 from app.models import *
 
 
+# ── Helpers ───────────────────────────────────────────────────────────────────
+def _ml_ready():
+    """Return True if the trained model file exists."""
+    model_path = os.path.join(settings.BASE_DIR, "app", "ml", "disease_model.pkl")
+    return os.path.exists(model_path)
+
+
+# ── Public pages ──────────────────────────────────────────────────────────────
 def home(request):
     try:
         return render(request, 'app/home.html')
@@ -37,9 +47,9 @@ def registration(request):
 def login(request):
     try:
         if request.method == 'POST':
-            mobile = str(request.POST.get("mobile")).strip()
+            mobile   = str(request.POST.get("mobile")).strip()
             password = str(request.POST.get("password")).strip()
-            role = str(request.POST.get("role")).strip()
+            role     = str(request.POST.get("role")).strip()
             if role == 'admin':
                 if mobile == admin.mobile and password == admin.password:
                     request.session['alogin'] = True
@@ -49,7 +59,7 @@ def login(request):
                 if patient.password == password:
                     request.session['plogin'] = True
                     request.session['patient'] = patient
-                    return redirect(search_doctor)
+                    return redirect(check_symptoms)
             message = 'Invalid username or password'
             return render(request, 'app/login.html', {'message': message})
         else:
@@ -63,10 +73,11 @@ def login(request):
     return render(request, 'app/login.html', {'message': message})
 
 
+# ── Admin views ───────────────────────────────────────────────────────────────
 def patient_master(request):
     if 'alogin' in request.session and request.session['alogin']:
         patients = None
-        message = ''
+        message  = ''
         try:
             if request.method == "POST":
                 patient = Patient.objects.get(id=request.POST.get("id"))
@@ -85,7 +96,7 @@ def add_speciality(request):
         message = ''
         try:
             if request.method == "POST":
-                speciality = Speciality()
+                speciality      = Speciality()
                 speciality.name = str(request.POST.get('name')).strip()
                 speciality.save(force_insert=True)
                 message = 'Speciality added successfully...'
@@ -99,12 +110,12 @@ def add_speciality(request):
 def speciality_master(request):
     if 'alogin' in request.session and request.session['alogin']:
         specialities = None
-        message = ''
+        message      = ''
         try:
             if request.method == "POST":
                 speciality = Speciality.objects.get(name=request.POST.get("name"))
                 speciality.delete()
-                message = 'Speciality details deleted successfully..'
+                message = 'Speciality deleted successfully..'
             specialities = Speciality.objects.all()
         except Exception as ex:
             message = ex
@@ -120,8 +131,8 @@ def add_symptom(request):
             if request.method == "POST":
                 specialities = request.POST.getlist('specialities')
                 for speciality in specialities:
-                    symptom = Symptom()
-                    symptom.name = str(request.POST.get('name')).strip()
+                    symptom          = Symptom()
+                    symptom.name     = str(request.POST.get('name')).strip()
                     symptom.speciality = Speciality.objects.get(name=speciality)
                     symptom.save(force_insert=True)
                 message = 'Symptom added successfully...'
@@ -136,12 +147,15 @@ def add_symptom(request):
 def symptom_master(request):
     if 'alogin' in request.session and request.session['alogin']:
         symptoms = None
-        message = ''
+        message  = ''
         try:
             if request.method == "POST":
-                symptom = Symptom.objects.get(name=request.POST.get("name"), speciality=request.POST.get("speciality"))
+                symptom = Symptom.objects.get(
+                    name=request.POST.get("name"),
+                    speciality=request.POST.get("speciality")
+                )
                 symptom.delete()
-                message = 'Symptom details deleted successfully..'
+                message = 'Symptom deleted successfully..'
             symptoms = Symptom.objects.all()
         except Exception as ex:
             message = ex
@@ -150,123 +164,182 @@ def symptom_master(request):
         return redirect(login)
 
 
-def add_doctor(request):
+def add_disease(request):
     if 'alogin' in request.session and request.session['alogin']:
-        message = ''
+        message      = ''
         specialities = None
         try:
             specialities = Speciality.objects.all()
             if request.method == "POST":
-                if request.method == 'POST':
-                    if request.FILES:
-                        id_ = datetime.now().strftime('%d%m%y%I%M%S')
-                        photo = request.FILES['photo']
-                        with open(f'media/doctor/{id_}.jpg', 'wb') as fw:
-                            fw.write(photo.read())
-                        doctor = Doctor()
-                        doctor.id = id_
-                        doctor.name = request.POST.get('name')
-                        doctor.qualification = request.POST.get('qualification')
-                        doctor.mobile = str(request.POST.get('mobile')).strip()
-                        doctor.email = str(request.POST.get('email')).strip()
-                        doctor.address = request.POST.get('address')
-                        doctor.gender = request.POST.get('gender')
-                        doctor.agegroup = request.POST.get('agegroup')
-                        doctor.speciality = Speciality.objects.get(name=request.POST.get('speciality'))
-                        doctor.experience = request.POST.get('experience')
-                        doctor.save(force_insert=True)
-                        message = 'Doctor profile added successfully...'
-                    else:
-                        raise Exception('Photo uploading error')
+                disease             = Disease()
+                disease.name        = str(request.POST.get('name')).strip()
+                disease.description = str(request.POST.get('description')).strip()
+                disease.precautions = str(request.POST.get('precautions')).strip()
+                disease.speciality  = Speciality.objects.get(name=request.POST.get('speciality'))
+                disease.save(force_insert=True)
+                message = 'Disease added successfully...'
         except Exception as ex:
             message = ex
-        return render(request, 'admin/add_doctor.html', {'message': message, 'specialities': specialities})
+        return render(request, 'admin/add_disease.html', {'message': message, 'specialities': specialities})
     else:
         return redirect(login)
 
 
-def doctor_master(request):
+def disease_master(request):
     if 'alogin' in request.session and request.session['alogin']:
-        doctors = None
-        message = ''
+        diseases = None
+        message  = ''
         try:
             if request.method == "POST":
-                doctor = Doctor.objects.get(id=request.POST.get("id"))
-                doctor.delete()
-                message = 'Doctor details deleted successfully..'
-            doctors = Doctor.objects.all()
+                disease = Disease.objects.get(name=request.POST.get("name"))
+                disease.delete()
+                message = 'Disease deleted successfully..'
+            diseases = Disease.objects.all()
         except Exception as ex:
             message = ex
-        return render(request, 'admin/doctor_master.html', {'message': message, 'doctors': doctors})
+        return render(request, 'admin/disease_master.html', {'message': message, 'diseases': diseases})
     else:
         return redirect(login)
 
 
-def search_doctor(request):
-    if 'plogin' in request.session and request.session['plogin']:
-        message = ''
-        agegroup = "Adult"
-        symptoms = None
-        try:
-            patient = request.session["patient"]
-            dob = datetime.strptime(patient.dob, '%d %b %Y')
-            today = datetime.today()
-            age = today.year - dob.year
-            if 0 <= age <= 10:
-                agegroup = "Children"
-            symptoms = Symptom.objects.all()
-            symptoms = set(list(symptoms.values_list('name', flat=True)))
-        except Exception as ex:
-            message = ex
-        return render(request, 'patient/search_doctor.html',
-                      {'message': message, 'agegroup': agegroup, 'symptoms': symptoms})
+def model_performance(request):
+    """Admin page — shows ML model accuracy charts and classification report."""
+    if 'alogin' in request.session and request.session['alogin']:
+        context = {'ml_ready': _ml_ready()}
+        if _ml_ready():
+            try:
+                from app.ml.predictor import get_model_info
+                meta = get_model_info()
+                results = meta.get("model_results", {})
+                report  = meta.get("classification_report", {})
+
+                # Build per-disease report rows
+                disease_rows = []
+                for disease, scores in report.items():
+                    if isinstance(scores, dict) and "precision" in scores:
+                        disease_rows.append({
+                            "disease":   disease,
+                            "precision": round(scores.get("precision", 0) * 100, 1),
+                            "recall":    round(scores.get("recall", 0) * 100, 1),
+                            "f1":        round(scores.get("f1-score", 0) * 100, 1),
+                            "support":   int(scores.get("support", 0)),
+                        })
+
+                context.update({
+                    "best_model":   meta.get("best_model"),
+                    "model_results": results,
+                    "disease_rows": disease_rows,
+                    "total_diseases": len(meta.get("all_diseases", [])),
+                    "total_symptoms": len(meta.get("all_symptoms", [])),
+                })
+            except Exception as ex:
+                context['error'] = str(ex)
+        return render(request, 'admin/model_performance.html', context)
     else:
         return redirect(login)
 
 
-def recommended_doctors(request):
-    if 'plogin' in request.session and request.session['plogin']:
-        message = ""
-        doctors = None
+def retrain_model(request):
+    """Admin action — retrain ML model."""
+    if 'alogin' in request.session and request.session['alogin']:
+        message = ''
         try:
-            if request.method == "POST":
-                agegroup = str(request.POST.get('agegroup')).lower()
-                symptoms = request.POST.getlist('symptoms')
-                symptoms = Symptom.objects.filter(name__in=symptoms)
-                specialities = set(list(symptoms.values_list('speciality', flat=True)))
-                doctors = Doctor.objects.filter(speciality__in=specialities).filter(agegroup=agegroup)
+            import subprocess, sys
+            manage_py = os.path.join(settings.BASE_DIR, "app", "ml", "train_model.py")
+            python    = sys.executable
+            result    = subprocess.run(
+                [python, manage_py],
+                capture_output=True, text=True, timeout=300,
+                cwd=settings.BASE_DIR
+            )
+            if result.returncode == 0:
+                message = "✅ Model retrained successfully!"
             else:
-                return redirect(login)
+                message = f"❌ Training failed: {result.stderr[-500:]}"
         except Exception as ex:
-            message = ex
-        return render(request, 'patient/recommended_doctors.html', {'message': message, 'doctors': doctors})
+            message = f"❌ Error: {ex}"
+        return render(request, 'admin/model_performance.html',
+                      {'ml_ready': _ml_ready(), 'message': message})
     else:
         return redirect(login)
 
 
-def saved_doctors(request):
+# ── Patient views ─────────────────────────────────────────────────────────────
+def check_symptoms(request):
     if 'plogin' in request.session and request.session['plogin']:
-        message = ""
-        doctors = None
-        patient = request.session['patient']
+        message  = ''
+        symptoms = []
+        try:
+            # If ML model is ready, use its symptom list; else fall back to DB
+            if _ml_ready():
+                from app.ml.predictor import get_model_info
+                meta     = get_model_info()
+                symptoms = sorted([s.replace("_", " ").title() for s in meta.get("all_symptoms", [])])
+            else:
+                db_syms  = Symptom.objects.all()
+                symptoms = sorted(set(db_syms.values_list('name', flat=True)))
+                message  = "⚠ ML model not trained yet — using database symptoms."
+        except Exception as ex:
+            message = str(ex)
+        return render(request, 'patient/check_symptoms.html',
+                      {'message': message, 'symptoms': symptoms, 'ml_ready': _ml_ready()})
+    else:
+        return redirect(login)
+
+
+def detected_diseases(request):
+    if 'plogin' in request.session and request.session['plogin']:
+        message     = ""
+        predictions = []
+        selected    = []
+        severity    = ""
         try:
             if request.method == "POST":
-                doctor = Doctor.objects.get(id=request.POST.get("id"))
-                if "delete" in request.POST:
-                    pd = PatientDoctor.objects.get(patient=patient, doctor=doctor)
-                    pd.delete()
-                    message = 'Doctor details removed from quick access..'
+                selected = request.POST.getlist('symptoms')
+                severity = request.POST.get('severity', '')
+                history  = request.POST.get('history', '')
+                allergies = request.POST.get('allergies', '')
+                hp        = request.POST.get('hp', '')
+
+                if not selected:
+                    message = "Please select at least one symptom."
+                elif _ml_ready():
+                    from app.ml.predictor import predict_diseases, get_disease_info
+                    raw_preds = predict_diseases(selected, top_n=5)
+
+                    for pred in raw_preds:
+                        info = get_disease_info(pred["disease"])
+                        predictions.append({
+                            **pred,
+                            "description": info.get("description", ""),
+                            "precautions": info.get("precautions", []),
+                        })
                 else:
-                    pd = PatientDoctor()
-                    pd.patient = patient
-                    pd.doctor = doctor
-                    pd.save(force_insert=True)
-            doctors = PatientDoctor.objects.filter(patient=patient)
-        except IntegrityError:
-            doctors = PatientDoctor.objects.filter(patient=patient)
+                    # Fallback — DB-based detection
+                    symptoms_qs = Symptom.objects.filter(name__in=selected)
+                    specialities = set(symptoms_qs.values_list('speciality', flat=True))
+                    diseases_qs  = Disease.objects.filter(speciality__in=specialities)
+                    for d in diseases_qs:
+                        predictions.append({
+                            "disease":     d.name,
+                            "confidence":  None,
+                            "rank":        len(predictions) + 1,
+                            "description": d.description,
+                            "precautions": [p.strip() for p in d.precautions.split(",") if p.strip()],
+                        })
+                    message = "⚠ ML model not trained — showing database-based results."
+            else:
+                return redirect(check_symptoms)
         except Exception as ex:
-            message = ex
-        return render(request, 'patient/saved_doctors.html', {'message': message, 'doctors': doctors})
+            message = str(ex)
+
+        return render(request, 'patient/detected_diseases.html', {
+            'message':     message,
+            'predictions': predictions,
+            'selected':    selected,
+            'severity':    severity,
+            'ml_ready':    _ml_ready(),
+        })
     else:
         return redirect(login)
 
@@ -276,7 +349,7 @@ def change_password(request):
         try:
             message = ''
             if request.method == 'POST':
-                patient = request.session['patient']
+                patient     = request.session['patient']
                 oldpassword = str(request.POST.get('oldpassword')).strip()
                 newpassword = str(request.POST.get('newpassword')).strip()
                 if patient.password == oldpassword:

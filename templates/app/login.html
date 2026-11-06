@@ -1,42 +1,83 @@
 {% extends "app/base.html" %}
 {% block content %}
 <nav id="breadcrumbs" class="breadcrumbs">
-	<div class="container page-wrapper">
-		<a href="/">Home</a> » <span class="breadcrumb_last" aria-current="page">Login</span>
-	</div>
+    <div class="container page-wrapper">
+        <a href="/">Home</a> &raquo; <span class="breadcrumb_last" aria-current="page">Portal Login</span>
+    </div>
 </nav>
-<section class="w3l-contact-main">
-		<div class="contact-infhny py-5">
-			<div class="container py-lg-5">
-				<div class="title-content text-left mb-lg-5 mt-4">
-					<h6 class="sub-title">Login</h6>
-					<h3 class="hny-title">Explore our services.</h3>
-				</div>
-				<div class="row align-form-map">
-					<div class="col-lg-8 form-inner-cont">
-						<form method="post" class="signin-form">
-							{%csrf_token%}
-							<div class="form-input">
-								<label for="w3lName">Login As*</label>
-								<input type="radio" name="role" value="admin" style="all: revert;" checked required/> Admin
-								<input type="radio" name="role" value="patient" style="all: revert;" required/> Patient
-							</div>
-							<div class="form-input">
-								<label for="w3lName">Mobile Number*</label>
-								<input type="text" name="mobile" pattern="[789][0-9]{9}" required/>
-							</div>
-							<div class="form-input">
-								<label for="w3lSender">Password*</label>
-								<input type="password" name="password" required/>
-							</div>
-							<button type="submit" class="btn btn-contact">Login</button>
-							<div class="form-input">
-								<label class="text-danger">{{message}}</label>
-							</div>
-						</form>
-					</div>					
-				</div>
-			</div>
-		</div>
-	</section>
+
+<section class="py-5" style="background: #f8fafc; min-height: 80vh;">
+    <div class="container">
+        <div class="auth-wrapper">
+            <div class="auth-header">
+                <div style="width: 50px; height: 50px; background: rgba(255, 255, 255, 0.15); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 12px;">
+                    <i class="fa fa-lock" style="font-size: 22px; color: #38bdf8;"></i>
+                </div>
+                <h3>Welcome Back</h3>
+                <p>Sign in to access the Disease Detection System</p>
+            </div>
+
+            <div class="auth-body">
+                {% if message %}
+                <div class="alert alert-danger mb-4" style="border-radius: 10px; font-size: 13.5px; padding: 10px 14px;">
+                    <i class="fa fa-exclamation-circle"></i> {{ message }}
+                </div>
+                {% endif %}
+
+                <form method="post">
+                    {% csrf_token %}
+
+                    <!-- Role Selector Pill -->
+                    <label style="font-size: 13px; font-weight: 600; color: #334155; margin-bottom: 8px; display: block;">Login Role</label>
+                    <div class="role-switcher">
+                        <div class="role-option active" id="role-admin-btn" onclick="selectRole('admin')">
+                            <i class="fa fa-user-secret"></i> Admin
+                        </div>
+                        <div class="role-option" id="role-patient-btn" onclick="selectRole('patient')">
+                            <i class="fa fa-user"></i> Patient
+                        </div>
+                    </div>
+                    <input type="hidden" name="role" id="selected-role" value="admin">
+
+                    <!-- Mobile Number -->
+                    <div class="form-group-modern">
+                        <label><i class="fa fa-phone"></i> Registered Mobile Number</label>
+                        <input type="text" name="mobile" id="mobile-input" placeholder="Enter 10-digit mobile number" pattern="[6789][0-9]{9}" required>
+                    </div>
+
+                    <!-- Password -->
+                    <div class="form-group-modern">
+                        <label><i class="fa fa-key"></i> Password</label>
+                        <input type="password" name="password" id="password-input" placeholder="Enter your password" required>
+                    </div>
+
+                    <button type="submit" class="btn btn-modern-primary w-100 py-3 mt-2" style="font-size: 15px;">
+                        <i class="fa fa-sign-in"></i> Sign In to Account
+                    </button>
+                </form>
+
+                <div class="text-center mt-4">
+                    <p style="font-size: 13.5px; color: #64748b; margin: 0;">
+                        Don't have a patient account?
+                        <a href="/registration" style="color: #1068eb; font-weight: 600; text-decoration: none;">Register here</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+function selectRole(role) {
+    document.getElementById('selected-role').value = role;
+    if (role === 'admin') {
+        document.getElementById('role-admin-btn').classList.add('active');
+        document.getElementById('role-patient-btn').classList.remove('active');
+    } else {
+        document.getElementById('role-patient-btn').classList.add('active');
+        document.getElementById('role-admin-btn').classList.remove('active');
+    }
+}
+</script>
 {% endblock %}
+

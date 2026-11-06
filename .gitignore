@@ -1,8 +1,74 @@
+# ==============================================================
+# Disease Detection System — .gitignore
+# ==============================================================
+
+# Python virtualenv
 venv/
+
+# Python bytecode
 __pycache__/
 *.pyc
+*.pyo
+*.pyd
+
+# IDE / editor settings
 .idea/
 .vscode/
+*.suo
+*.user
+
+# Environment secrets
 .env
-media/doctor/
-# dbDoctor.sqlite3 # Uncomment this line if you do NOT want to upload your database to GitHub
+
+# ---------------------------------------------------------------
+# Media uploads (doctor photos already deleted; preventive)
+# ---------------------------------------------------------------
+media/
+
+# ---------------------------------------------------------------
+# ML generated artifacts (large; regenerate with train_model.py)
+# ---------------------------------------------------------------
+app/ml/disease_model.pkl
+app/ml/model_meta.json
+app/ml/charts/
+app/ml/data/
+
+# Static generated charts
+static/charts/
+
+# ---------------------------------------------------------------
+# Database (contains sensitive patient data)
+# ---------------------------------------------------------------
+dbDoctor.sqlite3
+
+# ---------------------------------------------------------------
+# SQLiteStudio desktop app (already deleted; preventive)
+# ---------------------------------------------------------------
+SQLStudio/
+SQLStudio.lnk
+
+# ---------------------------------------------------------------
+# Temporary / one-off scripts
+# ---------------------------------------------------------------
+inspect_db.py
+fix_db.py
+update_admin_nav.py
+drop_tables.py
+
+# ---------------------------------------------------------------
+# Windows OS artifacts
+# ---------------------------------------------------------------
+Thumbs.db
+desktop.ini
+*.lnk
+
+# ---------------------------------------------------------------
+# macOS OS artifacts
+# ---------------------------------------------------------------
+.DS_Store
+
+# ---------------------------------------------------------------
+# Batch / shell convenience scripts (local only)
+# ---------------------------------------------------------------
+*.bat
+*.sh

@@ -1,0 +1,67 @@
+{% extends "admin/base.html" %}
+{% block content %}
+<nav id="breadcrumbs" class="breadcrumbs">
+    <div class="container page-wrapper">
+        <a href="/patientmaster">Admin Console</a> &raquo; <a href="/diseasemaster">Diseases</a> &raquo; <span class="breadcrumb_last" aria-current="page">Add Disease</span>
+    </div>
+</nav>
+
+<section class="py-5" style="background: #f8fafc; min-height: 85vh;">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-7">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <div>
+                        <h6 class="sub-title"><i class="fa fa-heartbeat"></i> Medical Knowledge Base</h6>
+                        <h2 class="hny-title" style="font-size: 26px;">Register Clinical Disease</h2>
+                    </div>
+                    <a href="/diseasemaster" class="btn btn-outline-secondary btn-sm" style="border-radius: 8px;">
+                        <i class="fa fa-arrow-left"></i> View All
+                    </a>
+                </div>
+
+                {% if message %}
+                <div class="alert {% if 'success' in message %}alert-success{% else %}alert-danger{% endif %} mb-4" style="border-radius: 10px;">
+                    {{ message }}
+                </div>
+                {% endif %}
+
+                <div class="modern-card">
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="form-group-modern mb-3">
+                            <label><i class="fa fa-pencil"></i> Disease Name*</label>
+                            <input type="text" name="name" placeholder="e.g. Type 2 Diabetes, Acute Bronchitis" required autocomplete="off">
+                        </div>
+
+                        <div class="form-group-modern mb-3">
+                            <label><i class="fa fa-tag"></i> Department / Speciality*</label>
+                            <select name="speciality" class="form-control" required style="border-radius: 8px; height: 46px; border: 1.5px solid #e2e8f0;">
+                                <option value="" disabled selected>-- Select Clinical Category --</option>
+                                {% for speciality in specialities %}
+                                <option value="{{ speciality.name }}">{{ speciality.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="form-group-modern mb-3">
+                            <label><i class="fa fa-info-circle"></i> Clinical Description*</label>
+                            <textarea name="description" rows="3" class="form-control" placeholder="Provide a clinical overview of the pathology, causes, and patient symptoms..." required style="border-radius: 8px; border: 1.5px solid #e2e8f0;"></textarea>
+                        </div>
+
+                        <div class="form-group-modern mb-4">
+                            <label><i class="fa fa-shield"></i> Recommended Precautions & Lifestyle Steps*</label>
+                            <textarea name="precautions" rows="3" class="form-control" placeholder="Comma-separated precautions (e.g. Stay hydrated, Rest, Avoid cold drinks, Take prescribed medication)..." required style="border-radius: 8px; border: 1.5px solid #e2e8f0;"></textarea>
+                            <small class="form-text text-muted">Separate multiple precautions with commas.</small>
+                        </div>
+
+                        <button type="submit" class="btn btn-modern-primary w-100 py-3">
+                            <i class="fa fa-check-circle"></i> Save Disease Record
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
